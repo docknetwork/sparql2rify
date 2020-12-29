@@ -3,6 +3,7 @@ name = "sparql2rify"
 version = "0.1.0"
 authors = ["Andrew Dirksen <andrew@dirksen.com>"]
 edition = "2018"
+license = "MIT OR Apache-2.0"
 
 [dependencies]
 rify = "0.5.1"
