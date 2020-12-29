@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Oxigraph server</title>
+    <link href="https://unpkg.com/@triply/yasgui@4/build/yasgui.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/@triply/yasgui@4/build/yasgui.min.js"></script>
+    <link rel="icon" type="image/svg+xml" href="/logo.svg">
+</head>
+<body>
+<div id="yasgui"></div>
+<script>
+    new Yasgui(document.getElementById("yasgui"), {
+        requestConfig: { endpoint: window.location.protocol + '//' + window.location.host + "/query" },
+        endpointCatalogueOptions: {
+            getData: function () {
+                return [
+                    { endpoint: window.location.protocol + '//' + window.location.host + "/query" },
+                    { endpoint: window.location.protocol + '//' + window.location.host + "/update" },
+                ];
+            },
+            keys: [],
+        }
+    });
+</script>
+</body>

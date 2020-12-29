@@ -1,0 +1,12 @@
+[workspace]
+members = [
+    "js",
+    "lib",
+    "python",
+    "server",
+    "testsuite",
+    "wikibase"
+]
+
+[profile.release]
+lto = true

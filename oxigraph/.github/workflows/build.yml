@@ -1,0 +1,68 @@
+name: build
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: rustup update
+      - run: rustup component add rustfmt
+      - run: cargo fmt -- --check
+
+  clippy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: rustup update
+      - run: rustup component add clippy
+      - run: cargo clippy --all --all-targets --all-features
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        submodules: true
+    - run: rustup update
+    - run: cargo build
+    - run: cargo test --verbose --all --all-features --exclude pyoxigraph
+      env:
+        RUST_BACKTRACE: 1
+
+  js:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: rustup update
+      - run: cargo install wasm-pack
+      - run: npm install
+        working-directory: ./js
+      - run: npm test
+        working-directory: ./js
+
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: rustup update
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - run: python -m venv python/venv
+      - run: source python/venv/bin/activate && pip install --upgrade pip maturin sphinx
+      - run: source venv/bin/activate && maturin develop
+        working-directory: ./python
+      - run: source ../venv/bin/activate && python -m unittest
+        working-directory: ./python/tests
+      - run: source ../venv/bin/activate && sphinx-build -M doctest . build
+        working-directory: ./python/docs
+      - run: source ../venv/bin/activate && sphinx-build -M html . build
+        working-directory: ./python/docs
